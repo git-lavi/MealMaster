@@ -1,17 +1,21 @@
 from flask import Flask, flash, request, redirect, session, render_template, abort, url_for, jsonify
+from functools import wraps
 import werkzeug
 import sqlite3
 import werkzeug.security
-import requests
+import requests # type: ignore
 
-
+# App
 app = Flask(__name__)
 app.secret_key = 'my super secret key'
 
+
+# API
 APP_ID = 'b1fa76db'
 API_KEY = '53125e7fe9fd59ceb0f1c2dc4b04ab8f'
 
 
+# DB
 def connect_to_db():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
@@ -23,6 +27,22 @@ def commit_close_db(conn: sqlite3.Connection):
     conn.close()
 
 
+# Login required
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('unauthorized'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return render_template('unauthorized.html'), 401
+
+
+# Main app routes
 @app.route("/")
 def home():
     return redirect("/login")
@@ -114,41 +134,25 @@ def login():
 
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
-    if 'username' not in session:
-        abort(401)  # Unauthorized: User is not logged in
     current_user = session['username']
     return render_template("dashboard.html", current_user=current_user)
 
 
-@app.errorhandler(401)
-def unauthorized(error):
-    return render_template('unauthorized.html'), 401
-
-
 @app.route("/food/<food_name>")
 def get_food_nutrition(food_name):
-    url = 'https://trackapi.nutritionix.com/v2/search/instant/'
-    headers = {'Content-Type': 'application/json', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
-    params = {'query': food_name, 'fields': 'item_name,nf_calories,nf_protein,nf_total_carbohydrate,nf_total_fat'}
+    url = 'https://trackapi.nutritionix.com/v2/search/instant'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
+    params = {'query': food_name}
 
     response = requests.get(url, headers=headers, params=params)
     print("API response: ", response)
     data = response.json()
-
-    # Extract info from response
-    if 'foods' in data and data['foods']:
-        food_item = data['foods'][0]  # Assuming the first item in the list is the desired one
-        nutrition_info = {
-            'name': food_item['food_name'],
-            'calories': food_item['nf_calories'],
-            'protein': food_item['nf_protein'],
-            'carbohydrates': food_item['nf_total_carbohydrate'],
-            'fat': food_item['nf_total_fat']
-        }
-        return jsonify(nutrition_info)
-    else:
-        return jsonify({'error': 'Food not found'}), 404
+    
+    branded = data['branded']
+    
+    return jsonify(data)
 
 
 
@@ -156,6 +160,7 @@ def get_food_nutrition(food_name):
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
 
 
 if __name__ == "__main__":
