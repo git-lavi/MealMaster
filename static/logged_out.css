@@ -1,0 +1,81 @@
+.form-container-box {
+    display: flex;
+    max-width: 100%;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 200px;
+    margin-right: 60px;
+    margin-left: 60px;
+    max-width: 300px;
+    padding: 35px 45px;
+    border: 1px solid rgb(206, 206, 193);
+    border-radius: 14px;
+    box-shadow: 0px 2px 4px 2px rgba(202, 201, 201, 0.562);
+    transition-duration: 0.15s;
+}
+
+/* Styling for when hovering over the form container or when focus is within*/
+.form-container:hover {
+    background-color: #f9f9f9;
+}
+
+.form-container:hover input {
+    background-color: #fcfcfc;
+}
+
+.form-container:focus-within,
+.form-container input:focus {
+    background-color: #f9f9f9; 
+}
+
+.form-container h4 {
+    color: #795454;
+    font-size: 20px;
+}
+
+.register-login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-input {
+    height: 30px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition-duration: 0.15s;
+}
+
+#register-button {
+    align-self: center;
+    width: fit-content;
+    margin: 7px;
+    padding: 8px 12px;
+    background-color: rgb(57, 152, 230);
+    color: #ebebeb;
+    border: 0px;
+    border-radius: 6px;
+}
+
+.login-input {
+    height: 35px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition-duration: 0.15s;
+}
+
+#login-button {
+    align-self: center;
+    width: fit-content;
+    margin: 7px;
+    padding: 8px 12px;
+    background-color: rgb(57, 152, 230);
+    color: #ebebeb;
+    border: 0px;
+    border-radius: 6px;
+}

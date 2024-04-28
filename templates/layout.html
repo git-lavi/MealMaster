@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Common tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/general.css">
+    
+    <!-- Link other styles sheets according to page -->
+    {% block link_styles %} {% endblock %}
+
+    <!-- Title according to page -->
+    <title> {% block title %} {% endblock %} </title>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="header-logo">
+            MealMaster
+        </div>
+        <div class="nav-section">
+            {% if current_user %}
+                <div class="nav-right">
+                    <ul>
+                        <li><a href="/profile">Profile</a></li>
+                        <li><a href="/logout">Log Out</a></li>
+                    </ul>
+                </div>
+                <div class="nav-bar">
+                    <ul>
+                        <li><a href="/dashboard">DASHBOARD</a></li>
+                        <li><a href="/diary">DIARY</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flashed-messages">
+                    {% for message in messages %}
+                        <div class="flashed-message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block main %}
+            <!-- Enter code block according to template -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        Powered by Nutritionix
+    </footer>
+    <script src="/static/script.js"></script>
+</body>
+</html>

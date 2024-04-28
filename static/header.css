@@ -1,0 +1,60 @@
+.main-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color:rgb(232, 243, 212);
+    min-height: 150px;
+}
+
+.header-logo {
+    margin-left: 30px;
+    margin-top: 15px;
+    padding: 5px;
+    font-size: 28px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-weight: 500;
+    color: rgb(3, 74, 141);
+}
+
+.nav-section {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    color:rgb(98, 102, 66);
+}
+
+.nav-section div li {
+    border-radius: 4px;
+}
+
+.nav-section div li:hover {
+    background-color: rgb(212, 188, 169);
+}
+
+.nav-right {
+    align-self: flex-end;
+}
+
+.nav-right ul {
+    list-style: none;
+    display: flex;
+    margin: 0 10px 0 0;
+}
+
+.nav-right li {
+    padding: 10px;
+}
+
+.nav-bar {
+    align-self: center;
+}
+
+.nav-bar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+}
+
+.nav-bar li {
+    padding: 10px 35px;
+}

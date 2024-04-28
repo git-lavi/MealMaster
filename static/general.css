@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    position: relative;
+    flex: 1;
+    display: flex;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer {
+    flex-shrink: 0;
+    background-color:rgb(232, 243, 212);
+    padding: 10px;
+    margin-top: auto; /* Push footer to the bottom of the page */
+    display: flex;
+    justify-content: end;
+    font-size: small;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Add this CSS to your stylesheet */
+.flashed-message {
+    position: absolute;
+    top: 0;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f0dda4;
+    color: #333;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Optional: Add animation */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.flashed-message.fade-out {
+    animation: fadeOut 1s ease forwards;
+}
