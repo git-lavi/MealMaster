@@ -37,8 +37,8 @@ def login_required(f):
     return decorated_function
 
 
-@app.errorhandler(401)
-def unauthorized(error):
+@app.route("/unauthorized")
+def unauthorized():
     return render_template('unauthorized.html'), 401
 
 
@@ -138,6 +138,13 @@ def login():
 def dashboard():
     current_user = session['username']
     return render_template("dashboard.html", current_user=current_user)
+
+
+@app.route("/diary")
+@login_required
+def diary():
+    current_user = session['username']
+    return render_template("diary.html", current_user=current_user)
 
 
 @app.route("/food/<food_name>")

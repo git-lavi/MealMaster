@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Diary - MealMaster
+{% endblock %}
+
+{% block link_styles %}
+<link rel="stylesheet" href="/static/diary.css">
+{% endblock %}
+
+{% block main %}
+<section class="diary-section">
+    <h2>Diary</h2>
+    <form action="/add_meal" method="POST">
+        <label for="meal-name">Meal Name:</label>
+        <input type="text" id="meal-name" name="meal_name" required>
+        
+        <div id="foods-container">
+            <div class="food-input">
+                <label for="food-name">Food Name:</label>
+                <input type="text" id="food-name" name="food_name[]" required>
+                <label for="food-quantity">Quantity:</label>
+                <input type="text" id="food-quantity" name="food_quantity[]" required>
+                <label for="food-unit">Unit:</label>
+                <input type="text" id="food-unit" name="food_unit[]" required>
+                <button type="button" class="remove-food">Remove</button>
+            </div>
+        </div>
+        
+        <button type="button" id="add-food">Add Food</button>
+        <button type="submit">Add Meal</button>
+    </form>
+</section>
+{% endblock %}
+
+{% block main_script %}
+<script src="/static/diary.js"></script>
+{% endblock %}
