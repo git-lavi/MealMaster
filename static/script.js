@@ -8,14 +8,4 @@ document.addEventListener("DOMContentLoaded", function() {
             message.style.display = 'none';
         }, 3000);
     });
-
-
-    // For Add Meal button
-    const addMealBtn = document.getElementById('add-meal-btn')
-
-    addMealBtn.addEventListener('click', function () {
-        getElementById('add-meal-name').style.display = 'block'
-    })
-
-
 });

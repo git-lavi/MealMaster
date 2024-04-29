@@ -37,3 +37,7 @@
 .food-input button:hover {
     background-color: #ff4d4d;
 }
+
+#add-meal-btn {
+    margin-bottom: 10px;
+}
