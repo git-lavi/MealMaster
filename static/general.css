@@ -44,6 +44,14 @@ a {
     text-align: center;
 }
 
+.success {
+    background-color: lightgreen;
+}
+
+.error {
+    background-color: crimson;
+}
+
 /* Optional: Add animation */
 @keyframes fadeOut {
     from { opacity: 1; }

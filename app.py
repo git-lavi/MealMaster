@@ -144,22 +144,73 @@ def dashboard():
 @login_required
 def diary():
     current_user = session['username']
-    return render_template("diary.html", current_user=current_user)
+    meals = []
+
+    try:
+        conn, cursor = connect_to_db()
+        cursor.execute("SELECT meal_name from meals WHERE username  = ?", (session['username'],))
+        records = cursor.fetchall()
+        for record in records:
+            meals.append(record[0])
+    except sqlite3.Error as e:
+        flash("Error fetching meals")
+        print("Error in db while fetching meals -", e)
+
+    finally:
+        conn.close()
+
+    return render_template("diary.html", current_user=current_user, meals=meals)
 
 
-@app.route("/food/<food_name>")
-def get_food_nutrition(food_name):
-    url = 'https://trackapi.nutritionix.com/v2/search/instant'
-    headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
-    params = {'query': food_name}
-
-    response = requests.get(url, headers=headers, params=params)
-    print("API response: ", response)
-    data = response.json()
+@app.route("/add_meal", methods=['POST'])
+@login_required
+def add_meal():
+    meal_name = request.form.get('meal_name')
+    if not meal_name:
+        flash("Please enter a meal name.", "error")
+        return redirect("/diary")
+    if not meal_name.isalpha():
+        flash("Meal name can only be alphabetical", "error")
+        return redirect("/diary")
     
-    branded = data['branded']
+    try:
+        conn, cursor = connect_to_db()
+        cursor.execute("SELECT * FROM meals WHERE username = ? AND meal_name = ?", (session['username'], meal_name))
+        meal_exists = cursor.fetchall()
+        
+        if meal_exists:
+            flash("This meal already exists!",  "error")
+            return redirect("/diary")
+        else:
+            cursor.execute("INSERT INTO meals (meal_name, username) VALUES (?,?)", (meal_name, session['username']))
+            conn.commit()
+            flash("Meal entered successfully", "success")
+        
+    except sqlite3.Error as e:
+        print("Error fetching Meals", e)
+        flash("An error occurred while entering meal.", "error")
+        return redirect("/diary")
     
-    return jsonify(data)
+    finally:
+        if conn:
+            conn.close()
+
+    return redirect("/diary")
+
+
+# @app.route("/food/<food_name>")
+# def get_food_nutrition(food_name):
+#     url = 'https://trackapi.nutritionix.com/v2/search/instant'
+#     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
+#     params = {'query': food_name}
+
+#     response = requests.get(url, headers=headers, params=params)
+#     print("API response: ", response)
+#     data = response.json()
+    
+#     branded = data['branded']
+    
+#     return jsonify(data)
 
 
 

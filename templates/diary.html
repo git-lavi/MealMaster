@@ -14,27 +14,45 @@ Diary - MealMaster
     <form action="/add_meal" method="POST" id="add-meal-form">
         <button type="button" id="add-meal-btn">Add Meal</button>
         <!-- Initially hidden input -->
-        <div id="meal-input" style="display: none;">
-            <label for="meal-name">Meal Name:</label>
-            <input type="text" id="meal-name" name="meal_name" required>
-            <button type="submit">Submit Meal</button>
+        <div id="meal-input-overlay">
+            <div id="meal-input">
+                <label for="meal-name">Meal Name:</label>
+                <input type="text" id="meal-name" name="meal_name" required>
+                <button id="meal-submit" type="submit">Submit</button>
+            </div>
         </div>
     </form>
 
-    <table id="meal-table" style="display: none;">
-        <thead>
-            <tr>
-                <th>Meal Name</th>
-                <th>Food Name</th>
-                <th>Quantity (gm)</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="meal-body">
-            <!-- Meals to be added dynamically. -->
-        </tbody>
-    </table>
-</section>
+    {% if meals %}
+        
+        {% for meal in meals %}
+
+            <div class="meal-tables-container">
+                
+                <div class="meal-table-box">
+                    <h3 class="meal-table-name"> {{ meal }} </h3>
+                    
+                    <table class="meal-table">
+                        <thead>
+                            <tr>
+                                <th>Food</th>
+                                <th>Quantity</th>
+                                <th>Protein</th>
+                                <th>Carbohydrates</th>
+                                <th>Fat</th>
+                                <th>Calories</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                    <button class="add-food-btn">&#43; Add Food</button>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}
 
 {% block script %}
