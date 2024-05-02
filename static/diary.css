@@ -89,7 +89,7 @@
     padding: 1em;
 }
 
-.add-food-btn {
+#add-food-btn {
     align-self: flex-start;
     padding: 5px 7px;
     border: 0;
@@ -99,6 +99,6 @@
     cursor: pointer;
 }
 
-.add-food-btn:hover {
+#add-food-btn:hover {
     background-color: rgb(35, 112, 201);
 }

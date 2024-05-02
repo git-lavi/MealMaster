@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    // Adding a meal
     const addMealBtn = document.getElementById('add-meal-btn');
     const mealInputOverlay = document.getElementById('meal-input-overlay')
     const mealInput = document.getElementById('meal-input');
@@ -19,4 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation(); // Stop the click event from propagating to the overlay
     });
 
-});
+
+    // Adding a food
+    
+    });

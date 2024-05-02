@@ -198,21 +198,59 @@ def add_meal():
     return redirect("/diary")
 
 
-# @app.route("/food/<food_name>")
-# def get_food_nutrition(food_name):
-#     url = 'https://trackapi.nutritionix.com/v2/search/instant'
-#     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
-#     params = {'query': food_name}
+@app.route("/food/<food_name>")
+def get_food(food_name):
+    url = 'https://trackapi.nutritionix.com/v2/search/instant'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
+    params = {'query': food_name}
 
-#     response = requests.get(url, headers=headers, params=params)
-#     print("API response: ", response)
-#     data = response.json()
+    response = requests.get(url, headers=headers, params=params)
+    print("Instant API response: ", response)
     
-#     branded = data['branded']
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to fetch data from Nutritionix API"}), 500
     
-#     return jsonify(data)
+    data = response.json()
+    
+    branded_list = data.get('branded', [])
+    common_list = data.get('common', [])
+    
+    if not branded_list:
+        return jsonify({"message": "Food not found."}), 404
+    
+    nix_item_id = branded_list[0]['nix_item_id']
+    print(nix_item_id)
+    return get_nutrients(nix_item_id)
 
+def get_nutrients(nix_item_id):
+    url = 'https://trackapi.nutritionix.com//v2/search/item'
+    headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
+    params = {'nix_item_id': nix_item_id}
 
+    response = requests.get(url, headers=headers, params=params)
+    print("get_nutrients API response:", response)
+
+    if response.status_code != 200:
+        print("Error in getting nutrients")
+        return jsonify({"error": "Failed to fetch data from Nutritionix API"}), 500
+
+    data = response.json()
+
+    serving_qty = data['foods'][0]['serving_qty']
+    serving_weight_grams = data['foods'][0]['serving_weight_grams']
+
+    print(serving_qty, serving_weight_grams)
+
+    nf_calories = data['foods'][0]['nf_calories']
+    nf_protein = data['foods'][0]['nf_protein']
+    nf_total_carbohydrate = data['foods'][0]['nf_total_carbohydrate']
+    nf_total_fat = data['foods'][0]['nf_total_fat']
+
+    print(nf_calories, nf_protein, nf_total_carbohydrate, nf_total_fat)
+
+    return jsonify(
+        {'calories': nf_calories, 'protein': nf_protein, 'carbohydates': nf_total_carbohydrate, 'fat': nf_total_fat}
+        )
 
 @app.route("/logout")
 def logout():
