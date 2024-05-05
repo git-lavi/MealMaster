@@ -84,9 +84,15 @@
     color: #8a8a8a;
 }
 
+.meal-table
+
 .meal-table th {
     font-weight: 500;
     padding: 1em;
+}
+
+.meal-table td {
+    text-align: center;
 }
 
 .add-food-btn {

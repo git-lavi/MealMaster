@@ -30,13 +30,13 @@ Diary - MealMaster
             <div class="meal-tables-container">
                 
                 <div class="meal-table-box">
-                    <h3 class="meal-table-name"> {{ meal }} </h3>
+                    <h3 class="meal-table-name"> {{ meal['meal_name'] }} </h3>
                     
                     <table class="meal-table">
                         <thead>
                             <tr>
                                 <th>Food</th>
-                                <th>Quantity</th>
+                                <th>Servings</th>
                                 <th>Protein</th>
                                 <th>Carbohydrates</th>
                                 <th>Fat</th>
@@ -44,14 +44,23 @@ Diary - MealMaster
                             </tr>
                         </thead>
                         <tbody>
-
+                            {% for food in meal['foods'] %}
+                                <tr>
+                                    <td>{{ food['food_name'] }}</td>
+                                    <td>{{ food['servings'] }}</td>
+                                    <td>{{ food['protein'] }}</td>
+                                    <td>{{ food['carbohydrates'] }}</td>
+                                    <td>{{ food['fat'] }}</td>
+                                    <td>{{ food['calories'] }}</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                     <button class="add-food-btn">Add Food</button>
                     <div class="food-input-overlay">
                         <form class="add-food-form" action="/add_food" method="POST">
                             <div class="food-input">
-                                <input type="hidden" name="meal-name" class="meal-name" value="{{ meal }}">
+                                <input type="hidden" name="meal-id" class="meal-id" value="{{ meal['meal_id'] }}">
 
                                 <label for="food-name">Food name:</label>
                                 <input type="text" class="food-name" name="food-name" required>
