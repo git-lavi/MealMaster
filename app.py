@@ -5,6 +5,7 @@ import sqlite3
 import werkzeug.security
 import requests # type: ignore
 
+
 # App
 app = Flask(__name__)
 app.secret_key = 'my super secret key'
@@ -13,6 +14,11 @@ app.secret_key = 'my super secret key'
 # API
 APP_ID = 'b1fa76db'
 API_KEY = '53125e7fe9fd59ceb0f1c2dc4b04ab8f'
+
+
+# API call exception
+class NixAPICallError(Exception):
+    pass
 
 
 # DB
@@ -198,59 +204,94 @@ def add_meal():
     return redirect("/diary")
 
 
-@app.route("/food/<food_name>")
-def get_food(food_name):
+@app.route("/add_food", methods=['POST'])
+@login_required
+def add_food():
+    meal_name = request.form.get('meal-name')
+    food_name = request.form.get("food-name")
+    food_servings = request.form.get("food-servings")
+
+    if not meal_name or not food_name or not food_servings or not food_servings.isdigit():
+        flash("invalid input", "error")
+        return redirect("/diary")
+    
+    food_servings = int(food_servings)
+
+    try:
+        nix_item_id = get_food_nix_id(food_name)
+    except Exception as e:
+        flash(str(e), "error")
+        return redirect("/diary")
+    
+    nutrients = get_nutrients(nix_item_id, food_servings)
+    
+    if not nutrients:
+        flash("Error fetching nutrients", "error")
+        return redirect("/diary")
+    
+    print(f"meal_name: {meal_name}, food_name: {food_name}, food_servings: {food_servings}, nix_item_id: {nix_item_id}, nutrients: {nutrients}")
+    
+    return redirect("/diary")
+
+
+def get_food_nix_id(food_name):
+    # Call API
     url = 'https://trackapi.nutritionix.com/v2/search/instant'
     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
     params = {'query': food_name}
-
-    response = requests.get(url, headers=headers, params=params)
-    print("Instant API response: ", response)
     
+    response = requests.get(url, headers=headers, params=params)
+    print("get_food_nix_id API call response:",  response)
     if response.status_code != 200:
-        return jsonify({"error": "Failed to fetch data from Nutritionix API"}), 500
+        print("Error fetching food list Nutritionix API")
+        raise NixAPICallError("Error fetching food list from Nutritionix API")
     
     data = response.json()
     
+    # Get food only from branded item list
     branded_list = data.get('branded', [])
-    common_list = data.get('common', [])
-    
     if not branded_list:
-        return jsonify({"message": "Food not found."}), 404
-    
+        print("Error obtaining branded food from Nutritionix API")
+        raise NixAPICallError("Sorry, we couldn't find this food.")
     nix_item_id = branded_list[0]['nix_item_id']
-    print(nix_item_id)
-    return get_nutrients(nix_item_id)
 
-def get_nutrients(nix_item_id):
+    return nix_item_id
+
+
+def get_nutrients(nix_item_id: str, servings: int):
     url = 'https://trackapi.nutritionix.com//v2/search/item'
     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
     params = {'nix_item_id': nix_item_id}
-
+    
     response = requests.get(url, headers=headers, params=params)
-    print("get_nutrients API response:", response)
+    print("get_nutrients API call response:", response)
 
     if response.status_code != 200:
-        print("Error in getting nutrients")
-        return jsonify({"error": "Failed to fetch data from Nutritionix API"}), 500
+        print("Failed to fetch nutrient data from Nutritionix API")
+        return None
 
     data = response.json()
 
+    if 'foods' not in data or not data['foods']:
+        return None
+
+    # Getting necessary values from Nutritionix
     serving_qty = data['foods'][0]['serving_qty']
-    serving_weight_grams = data['foods'][0]['serving_weight_grams']
-
-    print(serving_qty, serving_weight_grams)
-
     nf_calories = data['foods'][0]['nf_calories']
     nf_protein = data['foods'][0]['nf_protein']
     nf_total_carbohydrate = data['foods'][0]['nf_total_carbohydrate']
     nf_total_fat = data['foods'][0]['nf_total_fat']
 
-    print(nf_calories, nf_protein, nf_total_carbohydrate, nf_total_fat)
+    print(f"nf_calories: {type(nf_calories)}, serving_qty: {type(serving_qty)}, servings: {type(servings)}")
 
-    return jsonify(
-        {'calories': nf_calories, 'protein': nf_protein, 'carbohydates': nf_total_carbohydrate, 'fat': nf_total_fat}
-        )
+    calories = int(round((nf_calories / serving_qty * servings), 2))
+    protein = int(round((nf_protein / serving_qty * servings), 2))
+    carbohydrates = int(round((nf_total_carbohydrate / serving_qty * servings), 2))
+    fat = int(round((nf_total_fat / serving_qty * servings), 2))
+
+    return {'calories': calories, 'protein': protein, 'carbohydates': carbohydrates, 'fat': fat, 'serving_qty': serving_qty, 'servings': servings}
+        
+
 
 @app.route("/logout")
 def logout():

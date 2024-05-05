@@ -47,17 +47,26 @@ Diary - MealMaster
 
                         </tbody>
                     </table>
-                    <button class="add-food-btn">&#43; Add Food</button>
+                    <button class="add-food-btn">Add Food</button>
                     <div class="food-input-overlay">
-                        <div class="food-input">
-                            <label class="food-name">Food Name:</label>
-                            <input type="search" name="food-search">
-                            <ul class="search-results"></ul>
-                        </div>
-                    </div>
+                        <form class="add-food-form" action="/add_food" method="POST">
+                            <div class="food-input">
+                                <input type="hidden" name="meal-name" class="meal-name" value="{{ meal }}">
+
+                                <label for="food-name">Food name:</label>
+                                <input type="text" class="food-name" name="food-name" required>
+
+                                <label for="food-servings">No. of servings:</label>
+                                <input type="number" class="food-servings" name="food-servings" required>
+
+                                <button type="submit" class="food-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>                    
                 </div>
             </div>
         {% endfor %}
+
     {% endif %}
 
 {% endblock %}

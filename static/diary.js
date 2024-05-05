@@ -22,5 +22,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Adding a food
-    
+    const addFoodBtns = document.querySelectorAll('.add-food-btn');
+
+    addFoodBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const foodInputOverlay = this.parentNode.querySelector('.food-input-overlay');
+            const foodInput = foodInputOverlay.querySelector('.food-input');
+
+            foodInputOverlay.style.display = "block";
+            foodInput.style.display = "flex";
+        });
     });
+
+    document.addEventListener('click', function(event) {
+        const foodInputOverlays = document.querySelectorAll('.food-input-overlay');
+    
+        foodInputOverlays.forEach(function(overlay) {
+            overlay.addEventListener('click', function() {
+                overlay.style.display = 'none';
+                const foodInput = overlay.querySelector('.food-input');
+                foodInput.style.display = 'none';
+            });
+    
+            // Prevent closing when clicking inside the food input
+            const foodInput = overlay.querySelector('.food-input');
+            foodInput.addEventListener('click', function(event) {
+                event.stopPropagation(); // Stop the click event from propagating to the overlay
+            });
+        });
+    });
+});
