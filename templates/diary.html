@@ -52,6 +52,12 @@ Diary - MealMaster
                                     <td>{{ food['carbohydrates'] }}</td>
                                     <td>{{ food['fat'] }}</td>
                                     <td>{{ food['calories'] }}</td>
+                                    <td>
+                                        <form action="/remove_food" method="post">
+                                            <input type="hidden" name="food-id" value="{{food['food_id']}}">
+                                            <button name="remove-food-btn" class="remove-food-btn" type="submit">Remove</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>

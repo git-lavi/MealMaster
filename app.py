@@ -229,13 +229,16 @@ def add_food():
     
     food_servings = int(food_servings)
 
+    # try:
+    #     nix_food_name = get_nix_food_name(food_name)
+    # except Exception as e:
+    #     flash(str(e), "error")
+    #     return redirect("/diary")
     try:
-        nix_food_name = get_nix_food_name(food_name)
+        nutrients = get_nutrients(food_name, food_servings)
     except Exception as e:
         flash(str(e), "error")
         return redirect("/diary")
-    
-    nutrients = get_nutrients(nix_food_name, food_servings)
 
     if not nutrients:
         flash("Error fetching nutrients", "error")
@@ -243,8 +246,6 @@ def add_food():
     
     # Nutrient details from nutrients
     calories, protein, carbohydrates, fat = nutrients['calories'], nutrients['protein'], nutrients['carbohydrates'], nutrients['fat']
-    
-    print(f"meal_id: {meal_id}, food_name: {food_name}, food_servings: {food_servings}, nix_food_name: {nix_food_name}, calories: {calories}, protein: {protein}, carbohydrates: {carbohydrates}, fat: {fat}")
 
     # Insert food into DB
     try:
@@ -267,42 +268,73 @@ def add_food():
     return redirect("/diary")
 
 
-def get_nix_food_name(food_name):
-    # Call API
-    url = 'https://trackapi.nutritionix.com/v2/search/instant'
-    headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
-    params = {'query': food_name}
+@app.route("/remove_food", methods=['POST'])
+@login_required
+def remove_food():
+    food_id = request.form.get("food-id")
+    print(food_id)
+
+    try:
+        conn, cursor = connect_to_db()
+        cursor.execute("DELETE FROM foods WHERE food_id = ?", (food_id,))
+    except sqlite3.Error as e:
+        flash("Error deleting food", "error")
+        print("Error deleting food", str(e))
+        conn.rollback()
+        return redirect("/diary")
+    finally:
+        if conn:
+            conn.commit()
+            conn.close()
     
-    # testprint
-    print(params)
-    
-    response = requests.get(url, headers=headers, params=params)
-    print("get_food_nix_id API call response:",  response)
-    if response.status_code != 200:
-        print("Error fetching food list Nutritionix API")
-        raise NixAPICallError("Error fetching food list from Nutritionix API")
-    
-    data = response.json()
-    
-    # Get food only from common item list
-    common_list = data.get('common', [])
-    
-    if not common_list:
-        print("Error obtaining food from Nutritionix API")
-        raise NixAPICallError("Sorry, we couldn't find this food.")
-    
-    nix_food_name = common_list[0]['food_name']
-    return nix_food_name      
+    flash("Food deleted successfully.", "success")
+    return redirect("/diary")
 
 
-def get_nutrients(nix_food_name: str, servings: int):
+# def get_nix_food_name(food_name):
+#     # Call API
+#     url = 'https://trackapi.nutritionix.com/v2/search/instant'
+#     headers = {'Content-Type': 'application/x-www-form-urlencoded', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
+#     params = {'query': food_name}
+    
+#     # testprint
+#     print(params)
+    
+#     response = requests.get(url, headers=headers, params=params)
+#     print("get_food_nix_id API call response:",  response)
+#     if response.status_code != 200:
+#         print("Error fetching food list Nutritionix API")
+#         raise NixAPICallError("Error fetching food list from Nutritionix API")
+    
+#     data = response.json()
+    
+#     # Get food only from common item list
+#     common_list = data.get('common', [])
+    
+#     if not common_list:
+#         print("Error obtaining food from Nutritionix API")
+#         raise NixAPICallError("Sorry, we couldn't find this food.")
+    
+#     nix_food_name = common_list[0]['food_name']
+#     return nix_food_name      
+
+
+def get_nutrients(food_name: str, servings: int):
     url = 'https://trackapi.nutritionix.com/v2/natural/nutrients'
     headers = {'Content-Type': 'application/json', 'x-app-id': APP_ID, 'x-app-key': API_KEY}
-    json = {'query': nix_food_name}
+    json = {'query': food_name}
 
-    response = requests.post(url, headers=headers, json=json)
-    print("get_nutrition API call response:", response)
-    data = response.json()
+    try:
+        response = requests.post(url, headers=headers, json=json)
+        print("get_nutrition API call response:", response)
+        data = response.json()
+    except requests.RequestException as e:
+        print("Error calling API", str(e))
+        flash("An error occurred while fetching nutrients", "error")
+
+    if 'foods' not in data:
+        print("Food not found in Nutritionix Natural API")
+        raise NixAPICallError("Food not found")
 
     foods = data['foods']
     nf_calories = foods[0]['nf_calories']

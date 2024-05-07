@@ -50,6 +50,7 @@ a {
 
 .error {
     background-color: crimson;
+    color: whitesmoke;
 }
 
 /* Optional: Add animation */

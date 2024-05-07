@@ -89,10 +89,6 @@
     color: #8a8a8a;
 }
 
-.meal-table {
-    flex-grow: 1;
-}
-
 .meal-table th {
     font-weight: 600;
     color: #525252;
@@ -100,11 +96,27 @@
 }
 
 .meal-table tr {
-    padding: 1em
+    padding: 1em;
 }
 
 .meal-table td {
     text-align: center;
+    padding-bottom: 1vh;
+}
+
+.remove-food-btn {
+    font-size: 0.65em;
+    padding: 4px 4px;
+    background-color: rgba(240, 59, 59, 0.911);
+    color: rgb(241, 241, 241);
+    border: 0;
+    border-radius: 2px;
+    cursor: pointer;
+    transition-duration: 0.15s;
+}
+
+.remove-food-btn:hover {
+    background-color: rgba(216, 63, 63, 0.911);
 }
 
 .add-food-btn {
