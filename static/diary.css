@@ -76,17 +76,39 @@
 .meal-table-box {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     padding: 1em;
     border: 1px solid lightgrey;
     border-radius: 12px;
     box-shadow: 0 1px 6px 2px rgba(119, 136, 153, 0.486);
     margin-bottom: 1em;
+    transition-duration: 0.25s;
+}
+
+.meal-table-box:hover {
+    background-color: rgba(252, 252, 255, 0.75);
 }
 
 .meal-table-name {
     margin: 0;
     color: #8a8a8a;
+    align-self: center;
+}
+
+.remove-meal-btn {
+    align-self: flex-end;
+    padding: 5px 8px;
+    border: 0;
+    border-radius: 4px;
+    background-color: rgba(240, 59, 59, 0.877);
+    color: rgb(241, 241, 241);
+    cursor: pointer;
+    transition-duration: 0.15s;
+    font-weight: 500;
+}
+
+.remove-meal-btn:hover {
+    background-color: rgba(216, 63, 63, 0.911);
 }
 
 .meal-table th {
@@ -107,7 +129,7 @@
 .remove-food-btn {
     font-size: 0.65em;
     padding: 4px 4px;
-    background-color: rgba(240, 59, 59, 0.911);
+    background-color: rgba(240, 59, 59, 0.87);
     color: rgb(241, 241, 241);
     border: 0;
     border-radius: 2px;

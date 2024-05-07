@@ -33,6 +33,10 @@ Diary - MealMaster
                     
                     <table class="meal-table">
                         <h3 class="meal-table-name"> {{ meal['meal_name'] }} </h3>
+                        <form action="/remove_meal" method="post" class="remove-meal-form">
+                            <input type="hidden" name="meal-id" value="{{ meal['meal_id'] }}">
+                            <button class="remove-meal-btn">Remove Meal</button>
+                        </form>
                         <thead>
                             <tr>
                                 <th>Food</th>

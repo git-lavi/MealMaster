@@ -216,6 +216,36 @@ def add_meal():
     return redirect("/diary")
 
 
+@app.route("/remove_meal", methods=['POST'])
+@login_required
+def remove_meal():
+    meal_id = request.form.get('meal-id')
+
+    try:
+        conn, cursor = connect_to_db()
+        cursor.execute("""
+                       DELETE FROM foods WHERE meal_id = ?
+                       """, (meal_id,)
+                       )
+        cursor.execute("""
+                       DELETE FROM meals WHERE meal_id = ?
+                       """, (meal_id,)
+                       )
+        
+    except sqlite3.Error as e:
+        conn.rollback()
+        print("Error deleting meal", str(e))
+        flash("Error deleting meal", "error")
+        return redirect("/diary")
+
+    finally:
+        if conn:
+            commit_close_db(conn)
+
+    flash("Meal deleted successfully", "success")
+    return redirect("/diary")
+    
+
 @app.route("/add_food", methods=['POST'])
 @login_required
 def add_food():
