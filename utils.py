@@ -1,4 +1,4 @@
-import requests
+import requests # type: ignore
 from flask import flash
 from app import APP_ID, API_KEY
 

@@ -4,7 +4,6 @@ from database import connect_to_db, commit_close_db
 from utils import get_nutrients, NixAPICallError
 import sqlite3
 import werkzeug.security
-import requests
 from functools import wraps
 
 
