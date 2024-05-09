@@ -1,9 +1,43 @@
 {% extends 'layout.html' %}
 
+
+{% block link_styles %}
+<link rel="stylesheet" href="/static/dashboard.css">
+{% endblock  %}
+
+
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock  %}
+
+
 {% block title %}
     Dashboard
 {% endblock  %}
 
+
 {% block main %}
+
+
+<section>
+
+    <h4>INSIGHTS</h4>
+
+    {% if not total_nutrients %}
+        <p>Get insights on your logged foods here.</p>
+
+    {% else %}
+        <canvas id="pieChart" width="400" height="400" data-nutrients="{{total_nutrients|tojson}}"></canvas>
+
+        <div id="test" hidden>
+            {{ total_nutrients | tojson }}
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="/static/dashboard.js"></script>
+
+    {% endif %}
+
+</section>
 
 {% endblock  %}

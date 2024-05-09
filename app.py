@@ -1,5 +1,4 @@
-from flask import Flask, flash, request, redirect, session, render_template, abort, url_for, jsonify
-from functools import wraps
+from flask import Flask
 
 
 # App
@@ -14,5 +13,6 @@ API_KEY = '53125e7fe9fd59ceb0f1c2dc4b04ab8f'
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 from routes import *

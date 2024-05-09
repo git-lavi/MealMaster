@@ -41,3 +41,16 @@ def get_nutrients(food_name: str, servings: int):
 
     print(f"calories = {calories}, protein = {protein}, carbohydrates = {carbohydrates}, fat = {fat}")
     return {'calories': calories, 'protein': protein, 'carbohydrates': carbohydrates, 'fat': fat, 'servings': servings}
+
+
+def totals(foods):
+    """Returns total nutrient details for a given list of foods."""
+    calories = protein = carbohydrates = fat = 0
+    
+    for food in foods:
+        calories += food['calories']
+        protein += food['protein']
+        carbohydrates += food['carbohydrates']
+        fat += food['fat']
+
+    return {'calories': calories, 'protein': protein, 'carbohydrates': carbohydrates, 'fat': fat}

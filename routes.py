@@ -1,7 +1,7 @@
-from flask import render_template, redirect, url_for, flash, session, request
+from flask import render_template, redirect, url_for, flash, session, request, jsonify
 from app import app
 from database import connect_to_db, commit_close_db
-from utils import get_nutrients, NixAPICallError
+from utils import get_nutrients, NixAPICallError, totals
 import sqlite3
 import werkzeug.security
 from functools import wraps
@@ -117,7 +117,32 @@ def login():
 @login_required
 def dashboard():
     current_user = session['username']
-    return render_template("dashboard.html", current_user=current_user)
+    
+    try:
+        conn, cursor = connect_to_db()
+        cursor.execute("""
+                    SELECT m.meal_name, f.food_name, f.calories, f.protein, f.carbohydrates, f.fat
+                    FROM meals as m
+                    JOIN foods as f
+                    ON m.meal_id = f.meal_id
+                    """)
+        records = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+        foods = [dict(zip(columns, record)) for record in records]
+        total_nutrients = totals(foods)
+    
+    except Exception as e:
+        print("An error occurred:", str(e))
+        flash("Error loading nutrients", "error")
+        return redirect("/diary")
+    
+    finally:
+        if conn:
+            conn.close()
+    
+    print(total_nutrients, type(total_nutrients))
+    return render_template("dashboard.html",
+                           current_user=current_user, total_nutrients=total_nutrients)
 
 
 @app.route("/diary")
