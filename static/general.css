@@ -18,7 +18,7 @@ main {
 
 footer {
     flex-shrink: 0;
-    background-color:rgb(232, 243, 212);
+    background-color:rgba(216, 230, 190, 0.277);
     padding: 10px;
     margin-top: auto; /* Push footer to the bottom of the page */
     display: flex;

@@ -27,11 +27,10 @@
         <p>Get insights on your logged foods here.</p>
 
     {% else %}
-        <canvas id="pieChart" width="400" height="400" data-nutrients="{{total_nutrients|tojson}}"></canvas>
 
-        <div id="test" hidden>
-            {{ total_nutrients | tojson }}
-        </div>
+        <canvas id="pieChart" width="400" height="400" data-nutrients="{{ total_nutrients }}"></canvas>
+
+        <p>Total Calories: {{ calories }}</p>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="/static/dashboard.js"></script>

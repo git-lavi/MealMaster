@@ -1,19 +1,37 @@
 var canvas = document.getElementById('pieChart');
 
-var nutrientsData = canvas.dataset
+// Access the data-nutrients attribute as a JavaScript object
+var nutrientsData = JSON.parse(canvas.dataset.nutrients);
+delete nutrientsData['Calories'];
+console.log(nutrientsData);
 
-console.log(nutrientsData)
+// Get the labels (keys) and data (values) for the pie chart
+var labels = Object.keys(nutrientsData);
+var data = Object.values(nutrientsData);
 
+// Get the canvas element
+var ctx = document.getElementById('pieChart').getContext('2d');
 
-// console.log(nutrientsData)
+// Create the pie chart using Chart.js
+var pieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: [
+                'orange', // Red
+                'skyblue', // Blue
+                'pink', // Yellow
 
-// console.log(typeof(nutrientsData));
-
-
-// test = document.getElementById('test')
-
-// contents = test.innerHTML
-
-// jsonn = JSON.parse(contents)
-
-// console.log(typeof(jsonn))
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: 'Nutrient Distribution'
+        }
+    },
+});

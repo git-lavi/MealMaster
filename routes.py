@@ -5,6 +5,7 @@ from utils import get_nutrients, NixAPICallError, totals
 import sqlite3
 import werkzeug.security
 from functools import wraps
+import json
 
 
 # Login required
@@ -140,9 +141,11 @@ def dashboard():
         if conn:
             conn.close()
     
+    total_nutrients_json = json.dumps(total_nutrients)
+
     print(total_nutrients, type(total_nutrients))
     return render_template("dashboard.html",
-                           current_user=current_user, total_nutrients=total_nutrients)
+                           current_user=current_user, total_nutrients=total_nutrients_json, calories=total_nutrients['Calories'])
 
 
 @app.route("/diary")
@@ -262,6 +265,36 @@ def add_food():
     return redirect("/diary")
 
 
+@app.route("/remove_meal", methods=['POST'])
+@login_required
+def remove_meal():
+    meal_id = request.form.get('meal-id')
+
+    try:
+        conn, cursor = connect_to_db()
+        cursor.execute("""
+                       DELETE FROM foods WHERE meal_id = ?
+                       """, (meal_id,)
+                       )
+        cursor.execute("""
+                       DELETE FROM meals WHERE meal_id = ?
+                       """, (meal_id,)
+                       )
+
+    except sqlite3.Error as e:
+        conn.rollback()
+        print("Error deleting meal", str(e))
+        flash("Error deleting meal", "error")
+        return redirect("/diary")
+
+    finally:
+        if conn:
+            commit_close_db(conn)
+
+    flash("Meal deleted successfully", "success")
+    return redirect("/diary")
+
+
 @app.route("/remove_food", methods=['POST'])
 @login_required
 def remove_food():
@@ -283,8 +316,6 @@ def remove_food():
     
     flash("Food deleted successfully.", "success")
     return redirect("/diary")
-
-
 
 
 @app.route("/logout")

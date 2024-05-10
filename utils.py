@@ -53,4 +53,4 @@ def totals(foods):
         carbohydrates += food['carbohydrates']
         fat += food['fat']
 
-    return {'calories': calories, 'protein': protein, 'carbohydrates': carbohydrates, 'fat': fat}
+    return {'Calories': calories, 'Protein': protein, 'Carbohydrates': carbohydrates, 'Fat': fat}

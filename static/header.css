@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color:rgb(232, 243, 212);
+    background-color:rgba(174, 193, 139, 0.675);
     min-height: 150px;
 }
 
