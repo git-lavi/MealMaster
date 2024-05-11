@@ -17,7 +17,7 @@ Diary - MealMaster
         <div id="meal-input-overlay">
             <div id="meal-input">
                 <label for="meal-name">Meal Name:</label>
-                <input type="text" id="meal-name" name="meal_name" required>
+                <input type="text" id="meal-name" name="meal_name" required autocapitalize="on">
                 <button id="meal-submit" type="submit">Submit</button>
             </div>
         </div>
@@ -73,7 +73,7 @@ Diary - MealMaster
                                 <input type="hidden" name="meal-id" class="meal-id" value="{{ meal['meal_id'] }}">
 
                                 <label for="food-name">Food name:</label>
-                                <input type="text" class="food-name" name="food-name" required>
+                                <input type="text" class="food-name" name="food-name" required autocapitalize="words">
 
                                 <label for="food-servings">No. of servings:</label>
                                 <input type="number" class="food-servings" name="food-servings" required>

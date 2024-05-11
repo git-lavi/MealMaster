@@ -143,7 +143,10 @@ def dashboard():
     
     total_nutrients_json = json.dumps(total_nutrients)
 
-    print(total_nutrients, type(total_nutrients))
+    if not records:
+        total_nutrients_json = None
+
+    print(f"total_nutrients_json = {total_nutrients_json}, type = {type(total_nutrients_json)}")
     return render_template("dashboard.html",
                            current_user=current_user, total_nutrients=total_nutrients_json, calories=total_nutrients['Calories'])
 
@@ -316,6 +319,65 @@ def remove_food():
     
     flash("Food deleted successfully.", "success")
     return redirect("/diary")
+
+
+@app.route("/change_pw", methods=['GET', 'POST'])
+@login_required
+def change_pw():
+    current_user = session['username']
+    
+    if request.method == 'POST':
+        current_pw = request.form.get("current-pw")
+        new_pw = request.form.get("new-pw")
+        confirm_pw = request.form.get("confirm-pw")
+
+        if not current_pw or not new_pw or not confirm_pw:
+            flash("Please fill out all fields", "error")
+            return redirect("/change_pw")
+        elif new_pw != current_pw:
+            flash("Passwords do not match.", "error")
+            return redirect("/change_pw")
+        
+        # Update pw in DB
+        try:
+            conn, cursor = connect_to_db()
+            cursor.execute("SELECT hash FROM users WHERE username = ?", (current_user,))
+            db_pw = cursor.fetchone()[0]
+            print(db_pw)
+
+            if not werkzeug.security.check_password_hash(db_pw, current_pw):
+                flash("'Current password' is incorrect.", "error")
+                if conn:
+                    conn.close()
+                return redirect("/change_pw")
+            
+            else:
+                hashed_pw = werkzeug.security.generate_password_hash(new_pw)
+                cursor.execute("""
+                               UPDATE users
+                               SET hash = ?
+                               WHERE username = ?
+                               """,
+                               (hashed_pw, current_user)
+                               )
+                flash("Password changed successfully", "success")
+                conn.commit()
+
+        except sqlite3.Error as e:
+            flash("An error occurred. Please try again later.", "error")
+            print("Error occurred when changing password", str(e))
+            if conn:
+                conn.rollback()
+            return redirect("/change_pw")
+        
+        finally:
+            if conn:
+                conn.close()
+        
+        return redirect("/dashboard")
+
+    else:
+        return render_template("change_pw.html", current_user=current_user)
 
 
 @app.route("/logout")

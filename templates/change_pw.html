@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block link_styles %}
+<link rel="stylesheet" href="/static/change_pw.css">
+{% endblock  %}
+
+{% block title %}
+    Change Password
+{% endblock  %}
+
+{% block main %}
+    
+    <section>
+        <h3>Change Password</h3>
+        
+        <form action="/change_pw" method="post">
+            <input type="password" name="current-pw" placeholder="Currrent Password" required autofocus>
+            <input type="password" name="new-pw" placeholder="New Password" required>
+            <input type="password" name="confirm-pw" placeholder="Confirm New Password" required>
+            <button type="submit">Confirm</button>
+        </form>
+    </section>
+
+{% endblock  %}

@@ -1,0 +1,50 @@
+section {
+    margin-top: 4em;
+    padding: 1em 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgb(204, 203, 203);
+    box-shadow: 0 0 9px 3px rgb(233, 233, 233);
+    border-radius: 12px;
+    background-color: rgb(252, 252, 252);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    height: 27px;
+    margin-bottom: 10px;
+    border: 1px solid rgb(175, 175, 175);
+    border-radius: 4px;
+}
+
+input:nth-child(1) {
+    margin-bottom: 40px;
+}
+
+button {
+    margin-top: 8px;
+    max-width: fit-content;
+    align-self: center;
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 4px;
+    background-color: rgb(72, 153, 230);
+    color: whitesmoke;
+    transition-duration: 0.15s;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(77, 144, 206);
+    color: aliceblue;
+}
+
+button:active {
+    background-color: rgb(102, 157, 207);
+    color: rgb(207, 208, 209);
+}
