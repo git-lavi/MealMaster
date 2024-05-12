@@ -126,7 +126,9 @@ def dashboard():
                     FROM meals as m
                     JOIN foods as f
                     ON m.meal_id = f.meal_id
-                    """)
+                    WHERE m.username = ?
+                    """, (current_user,)
+                    )
         records = cursor.fetchall()
         columns = [column[0] for column in cursor.description]
         foods = [dict(zip(columns, record)) for record in records]
@@ -334,7 +336,7 @@ def change_pw():
         if not current_pw or not new_pw or not confirm_pw:
             flash("Please fill out all fields", "error")
             return redirect("/change_pw")
-        elif new_pw != current_pw:
+        if new_pw != confirm_pw:
             flash("Passwords do not match.", "error")
             return redirect("/change_pw")
         

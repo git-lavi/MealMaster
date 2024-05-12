@@ -49,6 +49,20 @@ document.addEventListener('DOMContentLoaded', function() {
             foodInput.addEventListener('click', function(event) {
                 event.stopPropagation(); // Stop the click event from propagating to the overlay
             });
+
+            // Prevent multiple submissions
+            const foodSubmitBtn = overlay.querySelector('.food-submit')
+            let submitted = false;
+
+            foodSubmitBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                if (!submitted) {
+                    foodSubmitBtn.disabled = true;
+                    submitted = true;
+                    this.closest('form').submit();
+                }
+            });
         });
     });
 });
