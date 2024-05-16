@@ -1,3 +1,5 @@
+// Assistance from ChatGPT taken for Javascript code.
+
 document.addEventListener("DOMContentLoaded", function() {
     // For flashed messages
     var flashedMessages = document.querySelectorAll('.flashed-message');

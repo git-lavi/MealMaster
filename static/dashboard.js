@@ -1,3 +1,5 @@
+// Assistance from ChatGPT taken for Javascript code.
+
 var canvas = document.getElementById('pieChart');
 
 // Access the data-nutrients attribute as a JavaScript object

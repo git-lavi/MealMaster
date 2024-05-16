@@ -1,3 +1,5 @@
+// Assistance from ChatGPT taken for Javascript code.
+
 document.addEventListener('DOMContentLoaded', function() {
 
     // Adding a meal
