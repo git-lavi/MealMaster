@@ -239,7 +239,8 @@ def add_food():
     try:
         nutrients = get_nutrients(food_name, food_servings)
     except Exception as e:
-        flash(str(e), "error")
+        flash("An error occurred while fetching nutrients. Please try again later.", "error")
+        print("Error while calling get_nutrients: ", str(e))
         return redirect("/diary")
 
     if not nutrients:
