@@ -23,9 +23,9 @@ python --version
 ``` 
 
 ### Installing Project Dependencies
-The different requirements for this project have been listed in [requirements.txt](/requirements.txt). You can install them through Python's *pip* package manager. Python versions 2.7.9 and later, as well as 3.4 and later, include *pip* by default.
+The different requirements for this project have been listed in [requirements.txt](requirements.txt). You can install them through Python's *pip* package manager. Python versions 2.7.9 and later, as well as 3.4 and later, include *pip* by default.
 
-You can install the dependencies listed in [requirements.txt](/requirements.txt) through the following steps:
+You can install the dependencies listed in [requirements.txt](requirements.txt) through the following steps:
 
 1. **Navigate to the project directory**:
     - Use the `cd` command to navigate to the directory.
@@ -43,7 +43,7 @@ The application utilizes Nutritionix's **Natural Language for Nutrients** API to
 
 ### Setting up **app.py**
 In **`app.py`**, set up `app.secret_key`, a secret key for your Flask application, `APP_ID`, your *Application ID* for Nutritionix's API, and `API_KEY`, your *Application Key* for the API.
-![Setting up app.secret_key, APP_ID and API_KEY](app_config.png)
+![Setting up app.secret_key, APP_ID and API_KEY](readme_img/app_config.png)
 
 That's it. The application is all set up now and should function as intended.
 
@@ -55,12 +55,12 @@ Once the application is set up, open a terminal and navigate to the directory th
 ### Registration and Login
 Once you run the application, you're taken to the login page. Here, you can either register as a new user, or if you have done so already, login to your account. 
 
-![login page](login.png)
+![login page](readme_img/login.png)
 
 ### Dashboard
 Once you have successfully registered yourself and log in, you're redirected to your **Dashboard**. For now, there won't be much on this page, however, once we start adding some food, it'll display some handy insights!
 
-![dashboard](dashboard.png)
+![dashboard](readme_img/dashboard.png)
 
 ### Diary
 #### Adding a  meal
@@ -72,7 +72,7 @@ Once the meal is added, you'll get a message saying 'Food added successfully.'
 
 Once your meal is added, you can add foods to your meal by clicking on the `Add Food` button. Upon clicking this button, you'll be asked the name of the food and the number of servings you wish to add.
 
-![Adding a meal and food](add_food.png)
+![Adding a meal and food](readme_img/add_food.png)
 
 Note that the application expects common food items, and may not be able to find some foods that are uncommon - such as a burger you had from a particular restaurant near your home - in which case, you may get a response that says the food was not found. Therefore, make sure to enter foods that are common.
 
@@ -93,14 +93,14 @@ Note that the **Remove** buttons function immediately, and won't ask you for a c
 ### Insights
 Once you've logged some foods, you can get some insights on the different nutrient info on the foods you've added by visiting your **Dashboard**.
 
-![insights](insights.png)
+![insights](readme_img/insights.png)
 
 A pie chart displaying your macros, and the total amount of calories you have consumed will be displayed on this page.
 
 ### Changing your Password
 You can change your login password by visiting the **Change Password** page, which can be accessed by clicking on the **`Change Password`** button on the page's header. 
 
-![change password page](change_pw.png)
+![change password page](readme_img/change_pw.png)
 
 Enter your current password, new password, and a confirmation for your new password. Once your password is changed successfully, you'll be redirected to the **Dashboard** page. Your new password will be required from the next time you log in.
 
